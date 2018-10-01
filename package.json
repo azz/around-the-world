@@ -1,0 +1,65 @@
+{
+  "name": "around-the-world",
+  "version": "0.0.0-development",
+  "description": "Localization library built on MessageFormat",
+  "repository": "azz/around-the-world",
+  "author": "Lucas Azzola <@azz>",
+  "main": "./dist",
+  "license": "MIT",
+  "files": ["dist"],
+  "dependencies": {
+    "messageformat": "^2.0.4"
+  },
+  "scripts": {
+    "prepublishOnly": "yarn build",
+    "build": "babel src -d dist --copy-files --ignore __tests__",
+    "test": "jest",
+    "lint": "eslint . --ignore-path=.gitignore",
+    "precommit": "pretty-quick --staged"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^10.0.1",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^5.6.1",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-jest": "^21.24.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "husky": "^0.14.3",
+    "jest": "^23.6.0",
+    "prettier": "1.14.3",
+    "pretty-quick": "^1.2.0"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "plugin:jest/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "sourceType": "module"
+    },
+    "env": {
+      "es6": true,
+      "browser": true
+    }
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "6.10"
+          }
+        }
+      ]
+    ]
+  }
+}
