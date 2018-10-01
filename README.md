@@ -13,7 +13,7 @@
 - [x] Lazily loads localization templates.
 - [x] Supports custom formatters.
 - [x] Simple API.
-- [x] Dynamically change the language.
+- [x] Dynamically change the locale.
 
 ## Install
 
@@ -38,13 +38,13 @@ import aroundTheWorld from 'around-the-world';
 
 (async () => {
   const { localize } = await aroundTheWorld({
-    loadLanguage: languageCode => {
-      if (languageCode === 'en-US') {
+    loadLocale: locale => {
+      if (locale === 'en-US') {
         return {
           hello_world: 'Hello, world!',
         };
       }
-      throw new Error('Unknown language!');
+      throw new Error('Unknown locale!');
     },
   });
 })();
@@ -52,12 +52,12 @@ import aroundTheWorld from 'around-the-world';
 
 ### Loading From a Server
 
-You can easily fetch string tables from your server using the `loadLanguage` function. It must resolve to an object.
+You can easily fetch string tables from your server using the `loadLocale` function. It must resolve to an object.
 
 ```js
 const { localize } = await aroundTheWorld({
-  loadLanguage: async languageCode => {
-    const response = await fetch(`/i18n/${languageCode}.json`);
+  loadLocale: async locale => {
+    const response = await fetch(`/i18n/${locale}.json`);
     return res.json();
   },
 });
@@ -65,35 +65,37 @@ const { localize } = await aroundTheWorld({
 localize('hello-world');
 ```
 
-### Specifying Default Language
+### Specifying Default Locale
 
-You can specify the default language to load using `defaultLanguage`. If you don't supply this, [`navigator.language`](https://mdn.io/navigator.language) is used.
+You can specify the default locale to load using `defaultLocale`. If you don't supply this, [`navigator.locale`](https://mdn.io/navigator.locale) is used.
 
 ```js
 const { localize } = await aroundTheWorld({
-  loadLanguage: languageCode => { /* ... */ }
+  loadLocale: locale => { /* ... */ }
 
-  defaultLanguage: 'en-AU',
+  defaultLocale: 'en-AU',
 });
 ```
 
-### Changing the Language
+### Changing the Locale
 
-You can read the current language at any time by calling `getCurrentLanguage()`, and you can set it by calling `setCurrentLanguage()`. The latter returns a promise that resolves once the language is loaded.
+You can read the current locale at any time by calling `getCurrentLocale()`, and you can set it by calling `setCurrentLocale()`. The latter returns a promise that resolves once the locale is loaded.
 
 ```js
 const {
   localize,
-  getCurrentLanguage,
-  setCurrentLanguage
+  getCurrentLocale,
+  setCurrentLocale,
 } = await aroundTheWorld({
-  loadLanguage: languageCode => { /* ... */ }
+  loadLocale: locale => {
+    /* ... */
+  },
 });
 
-getCurrentLanguage(); // 'en-AU'
+getCurrentLocale(); // 'en-AU'
 localize('hello'); // 'Hello'
 
-await setCurrentLanguage('jp');
+await setCurrentLocale('jp');
 localize('hello'); // 'こんにちは'
 ```
 
@@ -103,7 +105,7 @@ localize('hello'); // 'こんにちは'
 
 ```js
 const { localize } = await aroundTheWorld({
-  loadLanguage: languageCode => ({ number: '{value, decimal, 2}' })
+  loadLocale: locale => ({ number: '{value, decimal, 2}' })
 
   formatters: {
     decimal: (value, locale, arg) => value.toFixed(+arg),

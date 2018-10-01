@@ -6,7 +6,9 @@
   "author": "Lucas Azzola <@azz>",
   "main": "./dist",
   "license": "MIT",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "messageformat": "^2.0.4"
   },

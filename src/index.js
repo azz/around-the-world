@@ -1,41 +1,41 @@
 import MessageFormat from 'messageformat';
 
 export default async function({
-  loadLanguage = () => ({}),
-  defaultLanguage,
+  loadLocale = () => ({}),
+  defaultLocale,
   formatters = {},
 } = {}) {
   const messages = {};
 
-  if (!defaultLanguage && typeof navigator !== 'undefined') {
-    defaultLanguage = navigator.language;
+  if (!defaultLocale && typeof navigator !== 'undefined') {
+    defaultLocale = navigator.locale;
   }
-  let currentLanguage = defaultLanguage;
-  if (currentLanguage) {
-    await loadLanguageAndCompile(currentLanguage);
+  let currentLocale = defaultLocale;
+  if (currentLocale) {
+    await loadLocaleAndCompile(currentLocale);
   }
 
   return {
     localize,
-    setCurrentLanguage: async language => {
-      if (!messages[language]) {
-        await loadLanguageAndCompile(language);
+    setCurrentLocale: async locale => {
+      if (!messages[locale]) {
+        await loadLocaleAndCompile(locale);
       }
     },
-    getCurrentLanguage: () => currentLanguage,
+    getCurrentLocale: () => currentLocale,
   };
 
-  async function loadLanguageAndCompile(languageCode) {
-    currentLanguage = languageCode;
+  async function loadLocaleAndCompile(locale) {
+    currentLocale = locale;
 
-    const dict = await loadLanguage(languageCode);
-    const format = new MessageFormat(languageCode);
+    const dict = await loadLocale(locale);
+    const format = new MessageFormat(locale);
     format.addFormatters(formatters);
-    messages[languageCode] = format.compile(dict);
+    messages[locale] = format.compile(dict);
   }
 
   function localize(key, params) {
-    const fn = messages[currentLanguage] && messages[currentLanguage][key];
+    const fn = messages[currentLocale] && messages[currentLocale][key];
     if (!fn) {
       return key;
     }

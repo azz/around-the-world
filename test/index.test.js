@@ -1,53 +1,53 @@
 import aroundTheWorld from '../src';
 
-Object.defineProperty(window.navigator, 'language', {
+Object.defineProperty(window.navigator, 'locale', {
   value: 'de',
 });
 
 test('returns public api', async () => {
   const {
     localize,
-    setCurrentLanguage,
-    getCurrentLanguage,
+    setCurrentLocale,
+    getCurrentLocale,
   } = await aroundTheWorld();
 
   expect(localize).toMatchInlineSnapshot(`[Function]`);
-  expect(setCurrentLanguage).toMatchInlineSnapshot(`[Function]`);
-  expect(getCurrentLanguage).toMatchInlineSnapshot(`[Function]`);
+  expect(setCurrentLocale).toMatchInlineSnapshot(`[Function]`);
+  expect(getCurrentLocale).toMatchInlineSnapshot(`[Function]`);
 });
 
-test('language defaults to navigator.language', async () => {
-  const { getCurrentLanguage } = await aroundTheWorld();
+test('locale defaults to navigator.locale', async () => {
+  const { getCurrentLocale } = await aroundTheWorld();
 
-  expect(getCurrentLanguage()).toEqual('de');
+  expect(getCurrentLocale()).toEqual('de');
 });
 
-test('respects defaultLanguage option', async () => {
-  const { getCurrentLanguage } = await aroundTheWorld({
-    defaultLanguage: 'fr-CA',
+test('respects defaultLocale option', async () => {
+  const { getCurrentLocale } = await aroundTheWorld({
+    defaultLocale: 'fr-CA',
   });
 
-  expect(getCurrentLanguage()).toEqual('fr-CA');
+  expect(getCurrentLocale()).toEqual('fr-CA');
 });
 
-test('setCurrentLanguage() sets the language', async () => {
-  const { getCurrentLanguage, setCurrentLanguage } = await aroundTheWorld();
+test('setCurrentLocale() sets the locale', async () => {
+  const { getCurrentLocale, setCurrentLocale } = await aroundTheWorld();
 
-  await setCurrentLanguage('en-US');
+  await setCurrentLocale('en-US');
 
-  expect(getCurrentLanguage()).toEqual('en-US');
+  expect(getCurrentLocale()).toEqual('en-US');
 });
 
-test('aroundTheWorld() calls loadLanguage()', async () => {
-  const loadLanguage = jest.fn().mockResolvedValue({});
-  await aroundTheWorld({ loadLanguage });
+test('aroundTheWorld() calls loadLocale()', async () => {
+  const loadLocale = jest.fn().mockResolvedValue({});
+  await aroundTheWorld({ loadLocale });
 
-  expect(loadLanguage).toHaveBeenCalledWith('de');
+  expect(loadLocale).toHaveBeenCalledWith('de');
 });
 
-test('localize() uses loaded language', async () => {
+test('localize() uses loaded locale', async () => {
   const { localize } = await aroundTheWorld({
-    loadLanguage: () => ({
+    loadLocale: () => ({
       hello_world: 'Hello, world',
     }),
   });
@@ -55,9 +55,9 @@ test('localize() uses loaded language', async () => {
   expect(localize('hello_world')).toEqual('Hello, world');
 });
 
-test('localize() returns key if language not loaded', async () => {
-  const { localize, setCurrentLanguage } = await aroundTheWorld({
-    loadLanguage: async lang => {
+test('localize() returns key if locale not loaded', async () => {
+  const { localize, setCurrentLocale } = await aroundTheWorld({
+    loadLocale: async lang => {
       await 'next tick';
       switch (lang) {
         case 'de':
@@ -70,7 +70,7 @@ test('localize() returns key if language not loaded', async () => {
 
   expect(localize('hello_world')).toEqual('Hallo Welt');
 
-  let promise = setCurrentLanguage('en-US');
+  let promise = setCurrentLocale('en-US');
 
   expect(localize('hello_world')).toEqual('hello_world');
 
@@ -81,7 +81,7 @@ test('localize() returns key if language not loaded', async () => {
 
 test('localize() interpolates basic {PARAM}s', async () => {
   const { localize } = await aroundTheWorld({
-    loadLanguage: () => ({
+    loadLocale: () => ({
       best_franchise_is: `The best franchise is {franchise}`,
     }),
   });
@@ -93,7 +93,7 @@ test('localize() interpolates basic {PARAM}s', async () => {
 
 test('supports custom formatters', async () => {
   const { localize } = await aroundTheWorld({
-    loadLanguage: () => ({ last_price: 'Last price: {value, decimal, 2}' }),
+    loadLocale: () => ({ last_price: 'Last price: {value, decimal, 2}' }),
     formatters: {
       decimal: (value, locale, arg) => value.toFixed(+arg),
     },
