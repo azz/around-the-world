@@ -14,7 +14,7 @@
   },
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "babel src -d dist --copy-files --ignore __tests__",
+    "build": "babel src -d dist",
     "test": "jest",
     "lint": "eslint . --ignore-path=.gitignore",
     "precommit": "pretty-quick --staged"
