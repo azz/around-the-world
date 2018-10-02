@@ -6,12 +6,11 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=flat-square)](https://github.com/semantic-release/semantic-release)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
-> Simple to use ICU localization library built on [MessageFormat][]
+> Simple to use ICU localization library built for [MessageFormat][]
 
-`around-the-world` is a utility library built on top of [MessageFormat][] that makes it it simple to localize your app.
+`around-the-world` is a utility library built for [MessageFormat][] that makes it it simple to localize your app.
 
 - [x] Lazily loads localization templates.
-- [x] Supports custom formatters.
 - [x] Simple API.
 - [x] Dynamically change the locale.
 
@@ -31,38 +30,40 @@ npm install --save around-the-world
 
 ## Usage
 
-### Basics
+### Loading From a Server
+
+You can easily fetch string tables from your server using the `loadLocale` function and dynamic imports.
+The format is expected to be produced by the [MessageFormat][] compiler.
+
+```js
+const { localize } = await aroundTheWorld({
+  loadLocale: locale => import(`/i18n/${locale}.js`),
+});
+
+localize('hello-world');
+```
+
+### Compiling in the Client
+
+You can compile ICU messages in the client directly with `MessageFormat#compile`.
 
 ```js
 import aroundTheWorld from 'around-the-world';
+import MessageFormat from 'messageformat';
 
 (async () => {
   const { localize } = await aroundTheWorld({
     loadLocale: locale => {
       if (locale === 'en-US') {
-        return {
+        const mf = new MessageFormat(locale);
+        return mf.compile({
           hello_world: 'Hello, world!',
-        };
+        });
       }
       throw new Error('Unknown locale!');
     },
   });
 })();
-```
-
-### Loading From a Server
-
-You can easily fetch string tables from your server using the `loadLocale` function. It must resolve to an object.
-
-```js
-const { localize } = await aroundTheWorld({
-  loadLocale: async locale => {
-    const response = await fetch(`/i18n/${locale}.json`);
-    return res.json();
-  },
-});
-
-localize('hello-world');
 ```
 
 ### Specifying Default Locale
@@ -71,7 +72,9 @@ You can specify the default locale to load using `defaultLocale`. If you don't s
 
 ```js
 const { localize } = await aroundTheWorld({
-  loadLocale: locale => { /* ... */ }
+  loadLocale: locale => {
+    /* ... */
+  },
 
   defaultLocale: 'en-AU',
 });
@@ -93,22 +96,6 @@ localize('hello'); // 'Hello'
 
 await setCurrentLocale('jp');
 localize('hello'); // 'こんにちは'
-```
-
-### Adding Custom Formatters
-
-`MessageFormat` supports [custom formatters](https://messageformat.github.io/messageformat/page-guide#toc11__anchor), and you can use them with this library!
-
-```js
-const { localize } = await aroundTheWorld({
-  loadLocale: locale => ({ number: '{value, decimal, 2}' })
-
-  formatters: {
-    decimal: (value, locale, arg) => value.toFixed(+arg),
-  },
-});
-
-localize('number', { value: 12.3456 }); // '12.35'
 ```
 
 [messageformat]: https://github.com/messageformat/messageformat

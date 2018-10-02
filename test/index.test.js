@@ -1,3 +1,5 @@
+import MessageFormat from 'messageformat';
+
 import aroundTheWorld from '../src';
 
 Object.defineProperty(window.navigator, 'language', {
@@ -48,7 +50,7 @@ test('aroundTheWorld() calls loadLocale()', async () => {
 test('localize() uses loaded locale', async () => {
   const { localize } = await aroundTheWorld({
     loadLocale: () => ({
-      hello_world: 'Hello, world',
+      hello_world: () => 'Hello, world',
     }),
   });
 
@@ -61,9 +63,9 @@ test('localize() returns key if locale not loaded', async () => {
       await 'next tick';
       switch (lang) {
         case 'de':
-          return { hello_world: 'Hallo Welt' };
+          return { hello_world: () => 'Hallo Welt' };
         case 'en-US':
-          return { hello_world: 'Hello, world' };
+          return { hello_world: () => 'Hello, world' };
       }
     },
   });
@@ -81,9 +83,10 @@ test('localize() returns key if locale not loaded', async () => {
 
 test('localize() interpolates basic {PARAM}s', async () => {
   const { localize } = await aroundTheWorld({
-    loadLocale: () => ({
-      best_franchise_is: `The best franchise is {franchise}`,
-    }),
+    loadLocale: locale =>
+      new MessageFormat(locale).compile({
+        best_franchise_is: `The best franchise is {franchise}`,
+      }),
   });
 
   expect(localize('best_franchise_is', { franchise: 'Stargate' })).toEqual(
@@ -91,15 +94,28 @@ test('localize() interpolates basic {PARAM}s', async () => {
   );
 });
 
-test('supports custom formatters', async () => {
+test('works with custom formatters', async () => {
   const { localize } = await aroundTheWorld({
-    loadLocale: () => ({ last_price: 'Last price: {value, decimal, 2}' }),
-    formatters: {
-      decimal: (value, locale, arg) => value.toFixed(+arg),
+    loadLocale: locale => {
+      const mf = new MessageFormat(locale);
+      mf.addFormatters({
+        decimal: (value, locale, arg) => value.toFixed(+arg),
+      });
+      return mf.compile({
+        last_price: 'Last price: {value, decimal, 2}',
+      });
     },
   });
 
   expect(localize('last_price', { value: 12.3456 })).toEqual(
     'Last price: 12.35'
   );
+});
+
+test('supports dynamic import', async () => {
+  const { localize } = await aroundTheWorld({
+    loadLocale: async () => await import('./locale.js'),
+  });
+
+  expect(localize('test', { x: 'Ho' })).toEqual('Hey Ho');
 });

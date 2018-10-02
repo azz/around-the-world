@@ -1,10 +1,4 @@
-import MessageFormat from 'messageformat';
-
-export default async function({
-  loadLocale = () => ({}),
-  defaultLocale,
-  formatters = {},
-} = {}) {
+export default async function({ loadLocale = () => ({}), defaultLocale } = {}) {
   const messages = {};
 
   if (!defaultLocale && typeof navigator !== 'undefined') {
@@ -29,9 +23,7 @@ export default async function({
     currentLocale = locale;
 
     const dict = await loadLocale(locale);
-    const format = new MessageFormat(locale);
-    format.addFormatters(formatters);
-    messages[locale] = format.compile(dict);
+    messages[locale] = typeof dict.default === 'object' ? dict.default : dict;
   }
 
   function localize(key, params) {

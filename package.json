@@ -1,7 +1,7 @@
 {
   "name": "around-the-world",
   "version": "0.0.0-development",
-  "description": "Localization library built on MessageFormat",
+  "description": "Localization library built for MessageFormat",
   "repository": "azz/around-the-world",
   "author": "Lucas Azzola <@azz>",
   "main": "./dist",
@@ -9,9 +9,6 @@
   "files": [
     "dist"
   ],
-  "dependencies": {
-    "messageformat": "^2.0.4"
-  },
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "babel src -d dist",
@@ -23,6 +20,7 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-dynamic-import-node": "^2.1.0",
     "babel-preset-env": "^1.6.1",
     "eslint": "^5.6.1",
     "eslint-config-prettier": "^3.1.0",
@@ -30,6 +28,7 @@
     "eslint-plugin-prettier": "^3.0.0",
     "husky": "^0.14.3",
     "jest": "^23.6.0",
+    "messageformat": "^2.0.4",
     "prettier": "1.14.3",
     "pretty-quick": "^1.2.0"
   },
@@ -53,6 +52,9 @@
     }
   },
   "babel": {
+    "plugins": [
+      "dynamic-import-node"
+    ],
     "presets": [
       [
         "env",
