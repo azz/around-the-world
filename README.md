@@ -92,7 +92,7 @@ getCurrentLocale(); // 'en-AU'
 localize('hello'); // 'Hello'
 
 await setCurrentLocale('jp');
-localize('hello'); // 'こんにちは'
+localize('hello'); // 'こんにちは'
 ```
 
 ### Adding Custom Formatters
@@ -108,7 +108,7 @@ const { localize } = await aroundTheWorld({
   },
 });
 
-localize('number', { value: 12.3456 }); // -> '12.35'
+localize('number', { value: 12.3456 }); // '12.35'
 ```
 
 [messageformat]: https://github.com/messageformat/messageformat
