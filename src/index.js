@@ -8,7 +8,7 @@ export default async function({
   const messages = {};
 
   if (!defaultLocale && typeof navigator !== 'undefined') {
-    defaultLocale = navigator.locale;
+    defaultLocale = navigator.language;
   }
   let currentLocale = defaultLocale;
   if (currentLocale) {

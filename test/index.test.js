@@ -1,6 +1,6 @@
 import aroundTheWorld from '../src';
 
-Object.defineProperty(window.navigator, 'locale', {
+Object.defineProperty(window.navigator, 'language', {
   value: 'de',
 });
 
@@ -16,7 +16,7 @@ test('returns public api', async () => {
   expect(getCurrentLocale).toMatchInlineSnapshot(`[Function]`);
 });
 
-test('locale defaults to navigator.locale', async () => {
+test('locale defaults to navigator.language', async () => {
   const { getCurrentLocale } = await aroundTheWorld();
 
   expect(getCurrentLocale()).toEqual('de');

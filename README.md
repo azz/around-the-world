@@ -67,7 +67,7 @@ localize('hello-world');
 
 ### Specifying Default Locale
 
-You can specify the default locale to load using `defaultLocale`. If you don't supply this, [`navigator.locale`](https://mdn.io/navigator.locale) is used.
+You can specify the default locale to load using `defaultLocale`. If you don't supply this, [`navigator.language`](https://mdn.io/navigator.language) is used.
 
 ```js
 const { localize } = await aroundTheWorld({
@@ -82,11 +82,7 @@ const { localize } = await aroundTheWorld({
 You can read the current locale at any time by calling `getCurrentLocale()`, and you can set it by calling `setCurrentLocale()`. The latter returns a promise that resolves once the locale is loaded.
 
 ```js
-const {
-  localize,
-  getCurrentLocale,
-  setCurrentLocale,
-} = await aroundTheWorld({
+const { localize, getCurrentLocale, setCurrentLocale } = await aroundTheWorld({
   loadLocale: locale => {
     /* ... */
   },
